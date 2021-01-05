@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,29 +12,22 @@ namespace CrudJobs.Controllers
     [Route("[controller]")]
     public class HomeController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
+       
+        public HomeController()
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
         }
 
         [HttpGet]
-        public IEnumerable<JobBoard> Get()
+        public List<JobBoard> GetData()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new JobBoard
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
+            var JSON = System.IO.File.ReadAllText("data.json");
+            var model = JsonConvert.DeserializeObject<List<JobBoard>>(JSON);
+            return model;
         }
+
+
+
+
+
     }
 }
